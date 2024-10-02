@@ -8,22 +8,27 @@ class Cart
 
     public function addItem($item)
     {
-        if (!empty($this->items[$item['product_id']])){
-            //produsul deja exista, actualizam cantitatea
-            $this->items[$item['product_id']]['qty'] += $item['qty'];
-        }else $this->items[$item['product_id']] = $item;
+        if (isset($item['product_id']) && ($item['qty'] > 0) && isset($item['price'])){
+            if (!empty($this->items[$item['product_id']])){
+                //produsul deja exista, actualizam cantitatea
+                $this->items[$item['product_id']]['qty'] += $item['qty'];
+            }else $this->items[$item['product_id']] = $item;
 
 
-         $this->totalValue = 0;
-        foreach ($this->items as $item){
-            $this->totalValue += $item['price'] * $item['qty'];
+             $this->totalValue = 0;
+            foreach ($this->items as $item){
+                $this->totalValue += $item['price'] * $item['qty'];
+            }
+
+            if ($this->totalValue>200)      {
+                $this->shipping_cost =0;
+            }
+
+            $this->totalValue +=$this->shipping_cost;
         }
-
-        if ($this->totalValue>200)      {
-            $this->shipping_cost = 0;
+        else  {
+            echo 'Eroare la adaugarea produsului in cos!';
         }
-
-        $this->totalValue +=$this->shipping_cost;
 
     }
 
