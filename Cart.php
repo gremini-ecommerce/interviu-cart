@@ -8,6 +8,15 @@ class Cart
 
     public function addItem($item)
     {
+        if (isset($item['voucher_code'])){
+            $item['product_id'] = $item['voucher_code'];
+            $item['price'] = -$item['discount'];
+            if ($item['is_percentage']){
+                $item['price'] = -$item['discount'] * ($this->totalValue - $this->shipping_cost) / 100;
+            }
+            $item['qty'] = 1;
+        }
+
         if (isset($item['product_id']) && ($item['qty'] > 0) && isset($item['price'])){
             if (!empty($this->items[$item['product_id']])){
                 //produsul deja exista, actualizam cantitatea
